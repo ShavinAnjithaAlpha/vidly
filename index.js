@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const logger = require("./logger");
-const genresRouter = require("./routes/genres");
-const cussomerRouter = require("./routes/customer");
+const genresRouter = require("./routes/genres.routes");
+const cussomerRouter = require("./routes/customer.routes");
 
 // connect to the database
 mongoose

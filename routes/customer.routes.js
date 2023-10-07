@@ -59,33 +59,29 @@ router.post("/", async (req, res) => {
  * @returns {Object} - The updated customer object
  */
 router.put("/:id", async (req, res) => {
-  // first validate the request body
+  // first validate the request body using Joi
   const { error } = validateCustomer(req.body);
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
 
-  try {
-    const customer = Customer.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: req.body.name,
-        phone: req.body.phone,
-        isGold: req.body.isGold,
-      },
-      { new: true }
-    );
-
-    if (!customer) {
-      return res
-        .status(404)
-        .send("The customer with the given ID was not found.");
+  const customer = await Customer.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name,
+      phone: req.body.phone,
+      isGold: req.body.isGold,
+    },
+    {
+      new: true,
     }
-
-    res.send(customer);
-  } catch (err) {
-    res.status(400).send("Invalid ID.");
+  );
+  if (!customer) {
+    return res.status(404).send("The genre with the given ID was not found.");
   }
+
+  // return the genre just got updates
+  return res.send(customer);
 });
 
 /**

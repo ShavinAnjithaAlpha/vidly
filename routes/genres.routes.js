@@ -89,7 +89,7 @@ router.put("/:id", async (req, res) => {
   }
 
   // return the genre just got updates
-  return res.send(result);
+  return res.send(genre);
 });
 
 /**
