@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const logger = require("./logger");
 const genresRouter = require("./routes/genres.routes");
 const cussomerRouter = require("./routes/customer.routes");
+const movieRouter = require("./routes/movie.routes");
 
 // connect to the database
 mongoose
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 app.use("/api/genres", genresRouter);
 app.use("/api/customer", cussomerRouter);
+app.use("/api/movie", movieRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
