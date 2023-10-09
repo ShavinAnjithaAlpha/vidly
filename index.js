@@ -8,6 +8,7 @@ const genresRouter = require("./routes/genres.routes");
 const cussomerRouter = require("./routes/customer.routes");
 const movieRouter = require("./routes/movie.routes");
 const rentalRouter = require("./routes/rental.routes");
+const userRouter = require("./routes/user.routes");
 
 // connect to the database
 mongoose
@@ -22,6 +23,7 @@ app.use("/api/genres", genresRouter);
 app.use("/api/customer", cussomerRouter);
 app.use("/api/movie", movieRouter);
 app.use("/api/rental", rentalRouter);
+app.use("/api/user", userRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
