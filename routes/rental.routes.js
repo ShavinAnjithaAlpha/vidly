@@ -1,9 +1,13 @@
 const mongoose = require("mongoose");
+const Fawn = require("fawn");
 const express = require("express");
 const { Rental, validateRental } = require("../models/rental");
 const { Customer } = require("../models/customer");
 const { Movie } = require("../models/movie");
 const router = express.Router();
+
+// initialize Fawn
+Fawn.init("mongodb://127.0.0.1:27017/vidly");
 
 // create endpoint for Rental API
 router.get("/", async (req, res) => {
@@ -55,11 +59,25 @@ router.post("/", async (req, res) => {
       },
     });
 
+    //   // emulate the transaction using Fawn
+    //   new Fawn.Task()
+    //     .save("rentals", rental)
+    //     .update(
+    //       "movies",
+    //       { _id: movie._id },
+    //       {
+    //         $inc: {
+    //           numberInStock: -1,
+    //         },
+    //       }
+    //     )
+    //     .run()
+    //     .then(() => {
+    //       res.send(rental);
+    //     });
     rental = await rental.save();
-    // decrease the number of movie from the movie object
     movie.numberInStock--;
-    movie.save();
-
+    await movie.save();
     res.send(rental);
   } catch (err) {
     res.status(500).send("Internal Server Error");

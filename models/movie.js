@@ -36,7 +36,7 @@ const Movie = mongoose.model("Movie", movieSchema);
 // create a Joi schema to validate the request body
 const schema = Joi.object({
   title: Joi.string().required().min(5).max(255),
-  genreIds: Joi.array().items(Joi.string()).required(),
+  genreIds: Joi.array().items(Joi.objectId()).required(),
   numberInStock: Joi.number().required().min(0).max(255),
   dailyRentalRate: Joi.number().required().min(0).max(255),
 });

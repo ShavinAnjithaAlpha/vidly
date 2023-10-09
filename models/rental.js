@@ -60,8 +60,8 @@ const Rental = new mongoose.model("Rental", rentalSchema);
 
 // create a Joi schema for validate the request body
 const schema = Joi.object({
-  customerId: Joi.string().required().min(5).max(255),
-  movieId: Joi.string().required().min(5).max(255),
+  customerId: Joi.objectId().required(),
+  movieId: Joi.objectId().required(),
 });
 
 // function for validate the rental request body
