@@ -1,8 +1,9 @@
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const config = require("config");
+const winston = require("winston");
+require("winston-mongodb");
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
 const logger = require("./logger");
 const genresRouter = require("./routes/genres.routes");
@@ -11,6 +12,16 @@ const movieRouter = require("./routes/movie.routes");
 const rentalRouter = require("./routes/rental.routes");
 const userRouter = require("./routes/user.routes");
 const authRouter = require("./routes/auth.routes");
+const error = require("./middleware/error");
+const app = express();
+
+winston.add(new winston.transports.File({ filename: "logfile.log" }));
+winston.add(
+  new winston.transports.MongoDB({
+    db: "mongodb://127.0.0.1/vidly",
+    level: "error",
+  })
+);
 
 if (!config.get("jwtPrivateKey")) {
   console.error("FATAL ERROR: jwtPrivateKey is not defined.");
@@ -32,6 +43,7 @@ app.use("/api/movie", movieRouter);
 app.use("/api/rental", rentalRouter);
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

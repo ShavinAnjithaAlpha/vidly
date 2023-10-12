@@ -1,8 +1,10 @@
+require("express-async-errors");
 const express = require("express");
 const router = express.Router();
 const { Genre, validateGenre } = require("../models/genres");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const asyncMiddleware = require("../middleware/async");
 
 /**
  * Returns all genres.
@@ -30,17 +32,13 @@ router.get("/", async (req, res) => {
  */
 router.get("/:id", async (req, res) => {
   // fetch the genrer with the given object ID
-  try {
-    const genre = await Genre.findById(req.params.id);
+  const genre = await Genre.findById(req.params.id);
 
-    if (!genre) {
-      return res.status(404).send("The genre with the given ID was not found.");
-    }
-
-    res.send(genre);
-  } catch (err) {
-    res.status(400).send("Invalid ID.");
+  if (!genre) {
+    return res.status(404).send("The genre with the given ID was not found.");
   }
+
+  res.send(genre);
 });
 
 /**
@@ -56,12 +54,8 @@ router.post("/", auth, async (req, res) => {
   }
 
   const genre = new Genre(req.body);
-  try {
-    const result = await genre.save();
-    res.send(result);
-  } catch (err) {
-    res.status(500).send("Internal Server Error.");
-  }
+  const result = await genre.save();
+  res.send(result);
 });
 
 /**
@@ -100,16 +94,12 @@ router.put("/:id", async (req, res) => {
  * @param {Object} res - The response object.
  */
 router.delete("/:id", [auth, admin], async (req, res) => {
-  try {
-    const genre = await Genre.findByIdAndRemove(req.params.id);
-    if (!genre) {
-      return res.status(404).send("The genre with the given ID was not found.");
-    }
-
-    res.send(genre);
-  } catch (err) {
-    res.status(400).send("Invalid ID.");
+  const genre = await Genre.findByIdAndRemove(req.params.id);
+  if (!genre) {
+    return res.status(404).send("The genre with the given ID was not found.");
   }
+
+  res.send(genre);
 });
 
 module.exports = router;
