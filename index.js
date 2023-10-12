@@ -9,6 +9,7 @@ const cussomerRouter = require("./routes/customer.routes");
 const movieRouter = require("./routes/movie.routes");
 const rentalRouter = require("./routes/rental.routes");
 const userRouter = require("./routes/user.routes");
+const authRouter = require("./routes/auth.routes");
 
 // connect to the database
 mongoose
@@ -24,6 +25,7 @@ app.use("/api/customer", cussomerRouter);
 app.use("/api/movie", movieRouter);
 app.use("/api/rental", rentalRouter);
 app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
