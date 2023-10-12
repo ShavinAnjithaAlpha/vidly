@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const Joi = require("joi");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const config = require("config");
 const router = express.Router();
 const { User } = require("../models/user");
 
@@ -20,8 +22,11 @@ router.post("/", async (req, res) => {
       req.body.password,
       user.password
     );
+    if (!validPassword) res.status(400).send("Invalid email or password.");
 
-    res.send(validPassword);
+    // create the json web token for thsi user
+    const token = user.generateAuthToken();
+    res.send(token);
   } catch (err) {
     res.status(500).send("Internal Server Error...");
   }

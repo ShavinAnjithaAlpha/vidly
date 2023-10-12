@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { Genre, validateGenre } = require("../models/genres");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 /**
  * Returns all genres.
@@ -46,7 +48,7 @@ router.get("/:id", async (req, res) => {
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  */
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   // validate the request body using Joi
   const { error } = validateGenre(req.body);
   if (error) {
@@ -58,7 +60,7 @@ router.post("/", async (req, res) => {
     const result = await genre.save();
     res.send(result);
   } catch (err) {
-    res.status(404).send(err.details[0].message);
+    res.status(500).send("Internal Server Error.");
   }
 });
 
@@ -97,7 +99,7 @@ router.put("/:id", async (req, res) => {
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  */
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   try {
     const genre = await Genre.findByIdAndRemove(req.params.id);
     if (!genre) {

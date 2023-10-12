@@ -4,6 +4,7 @@ const express = require("express");
 const { Rental, validateRental } = require("../models/rental");
 const { Customer } = require("../models/customer");
 const { Movie } = require("../models/movie");
+const auth = require("../middleware/auth");
 const router = express.Router();
 
 // initialize Fawn
@@ -30,7 +31,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   // validate the request body
   const { error } = validateRental(req.body);
   if (error) return res.status(400).send(error.details[0].message);

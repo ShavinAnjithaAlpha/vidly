@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 const { Customer, validateCustomer } = require("../models/customer");
+const auth = require("../middleware/auth");
 
 /**
  * Fetches all the customers from the database
@@ -33,7 +34,7 @@ router.get("/", async (req, res) => {
  * @param {Object} res - The response object
  * @returns {Object} - The newly created customer object
  */
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   // first validate the request body
   const { error } = validateCustomer(req.body);
 

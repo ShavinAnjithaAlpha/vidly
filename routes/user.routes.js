@@ -1,4 +1,6 @@
 const _ = require("lodash");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { User, validateUser } = require("../models/user");
@@ -25,7 +27,11 @@ router.post("/", async (req, res) => {
 
     // save the user object in the database
     const result = await user.save();
-    res.send(_.pick(result, ["_id", "name", "email"]));
+
+    const token = user.generateAuthToken();
+    res
+      .header("x-auth-token", token)
+      .send(_.pick(result, ["_id", "name", "email"]));
   } catch (err) {
     res.status(500).send("Internal Server Error...");
   }
